@@ -8,6 +8,7 @@ import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.PublicKey;
 
 /**
  * Created by zhuxiaole on 2018/1/13.
