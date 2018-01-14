@@ -21,10 +21,10 @@ public class SM2AlgorithmIdentifier extends AlgorithmIdentifier {
     @Override
     public ASN1Primitive toASN1Primitive() {
         ASN1ObjectIdentifier algorithm = new ASN1ObjectIdentifier("1.2.156.10197.1.301");
+
         ASN1EncodableVector v = new ASN1EncodableVector();
 
         v.add(algorithm);
-
         if (getParameters() != null)
         {
             v.add(getParameters());
