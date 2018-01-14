@@ -5,10 +5,15 @@ import base.Util;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
+import org.bouncycastle.jcajce.provider.asymmetric.util.KeyUtil;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
+import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECPoint;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
  * Created by zhuxiaole on 2018/1/13.
@@ -111,7 +116,8 @@ public class SM2Utils {
         String prik = "3690655E33D5EA3D9A4AE1A1ADD766FDEA045CDEAA43A9206FB8C430CEFE0D94";
         // 国密规范正式公钥
         String pubk = "04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19BB737302813BA39ED3FA3C51639D7A20C7391A";
-
+        X509EncodedKeySpec publickey = new X509EncodedKeySpec(Util.hexToByte( "04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19BB737302813BA39ED3FA3C51639D7A20C7391A"));
+       // BCECPublicKey k = new BCECPublicKey();
         System.out.println("加密: ");
         String cipherText = SM2Utils.encrypt(Util.hexToByte(pubk), sourceData);
         System.out.println(cipherText);

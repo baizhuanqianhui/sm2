@@ -2,16 +2,17 @@ package import1;
 
 
 import base.SM2X509V3CertificateGenerator;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.security.cert.Certificate;
 import javax.security.auth.x500.X500Principal;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
-
-import java.security.*;
 import java.util.Date;
 
 /**
@@ -51,18 +52,26 @@ public class BaseCert {
      * @param user
      * @return
      */
-    public X509Certificate generateCert(String user) {
+    public X509Certificate generateCert(String user) throws InvalidKeyException {
+        try { // 创建KeyStore
+        KeyStore store = KeyStore.getInstance("PKCS12");
+        store.load(null, null);
         X509Certificate cert = null;
-        BigInteger num = new BigInteger("111111");
+        BigInteger num = new BigInteger("110123456789");
 
             KeyPair keyPair = this.kpg.generateKeyPair();
             // 公钥
-            PublicKey pubKey = keyPair.getPublic();
+            PublicKey pubKey1 =keyPair.getPublic();;//
             // 私钥
             PrivateKey priKey = keyPair.getPrivate();
+        //ECPublicKey bcecPublicKey = new ECPublicKeyImpl(Util.hexToByte("04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19"));
+        //EncodedKeySpec publickey = new X509EncodedKeySpec(Util.hexToByte( "04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19BB737302813BA39ED3FA3C51639D7A20C7391A"));
+
+             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+           // PublicKey pubKey =  keyFactory.generatePublic(publickey);
 
 
-           // X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+        // X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
             SM2X509V3CertificateGenerator certGen = new SM2X509V3CertificateGenerator();
             // 设置序列号
             certGen.setSerialNumber(num);
@@ -74,12 +83,16 @@ public class BaseCert {
             // 设置使用者
             certGen.setSubjectDN(new X500Principal(CAConfig.CA_DEFAULT_SUBJECT + user));
             // 公钥
-            certGen.setPublicKey(pubKey);
+            certGen.setPublicKey(pubKey1);
             // 签名算法
-          //  certGen.setSignatureAlgorithm(CAConfig.SM3_SM2);
-           certGen.setSignatureAlgorithm(CAConfig.CA_SHA);
-        try {
+            certGen.setSignatureAlgorithm(CAConfig.SM3_SM2);
+          // certGen.setSignatureAlgorithm(CAConfig.CA_SHA);
+
             cert = certGen.generate(priKey);
+            store.setKeyEntry("alias", keyPair.getPrivate(),
+                    "111111".toCharArray(),  new Certificate[] { cert});
+
+            return cert;
         } catch (SignatureException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -88,8 +101,15 @@ public class BaseCert {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+        } catch (CertificateException e1) {
+            e1.printStackTrace();
+        }  catch (KeyStoreException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
 
-        return cert;
+
+        return null;
     }
 }

@@ -9,13 +9,21 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+       <!-- <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <version>1.56</version>
+       </dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.57</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk16 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
             <version>1.56</version>
         </dependency>
-
-
-
     </dependencies>
 </project>

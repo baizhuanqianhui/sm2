@@ -193,7 +193,7 @@ public class SM2X509V3CertificateGenerator extends X509V3CertificateGenerator {
 
         v.add(tbsCert);
         v.add(sigAlgId);
-      //  v.add(new DERBitString(signature));
+        v.add(new DERBitString("04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19BB737302813BA39ED3FA3C51639D7A20C7391A".getBytes()));
 
         return (X509Certificate)certificateFactory.engineGenerateCertificate(
                 new ByteArrayInputStream(new DERSequence(v).getEncoded(ASN1Encoding.DER)));
