@@ -188,8 +188,8 @@ public class SM2X509V3CertificateGenerator extends X509V3CertificateGenerator {
     }
     private X509Certificate generateJcaObject(TBSCertificate tbsCert, byte[] signature) throws Exception{
         ASN1EncodableVector v = new ASN1EncodableVector();
-        ASN1ObjectIdentifier a = new ASN1ObjectIdentifier("uioertyuiop");
-        v.add(a);
+       // ASN1ObjectIdentifier a = new ASN1ObjectIdentifier("uioertyuiop");
+  
         v.add(tbsCert);
         v.add(sigAlgId);
         v.add(new DERBitString(signature));
