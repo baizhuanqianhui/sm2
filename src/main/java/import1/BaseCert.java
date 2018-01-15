@@ -2,14 +2,19 @@ package import1;
 
 
 import base.SM2X509V3CertificateGenerator;
-
+import crypto.SM2;
+import crypto.SM2KeyPair;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.math.ec.ECPoint;
 
-import java.security.cert.Certificate;
+
 import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -67,6 +72,36 @@ public class BaseCert {
         //ECPublicKey bcecPublicKey = new ECPublicKeyImpl(Util.hexToByte("04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19"));
         //EncodedKeySpec publickey = new X509EncodedKeySpec(Util.hexToByte( "04F6E0C3345AE42B51E06BF50B98834988D54EBC7460FE135A48171BC0629EAE205EEDE253A530608178A98F1E19BB737302813BA39ED3FA3C51639D7A20C7391A"));
 
+            SM2 sm02 = new SM2();
+            SM2KeyPair keyPair1 = sm02.generateKeyPair();
+            ECPoint publicKey=keyPair1.getPublicKey();
+            BigInteger privateKey=keyPair1.getPrivateKey();
+
+
+            ECPublicKey b = new ECPublicKey() {
+                SM2 sm02 = new SM2();
+                SM2KeyPair keyPair1 = sm02.generateKeyPair();
+                public ECPoint getQ() {
+                    return keyPair1.getPublicKey();
+                }
+
+                public ECParameterSpec getParameters() {
+                    return null;
+                }
+
+                public String getAlgorithm() {
+                    return "SM2";
+                }
+
+                public String getFormat() {
+                    return "";
+                }
+
+                public byte[] getEncoded() {
+                    return  keyPair1.getPublicKey().getEncoded();
+                }
+            };
+
              KeyFactory keyFactory = KeyFactory.getInstance("RSA");
            // PublicKey pubKey =  keyFactory.generatePublic(publickey);
 
@@ -83,7 +118,7 @@ public class BaseCert {
             // 设置使用者
             certGen.setSubjectDN(new X500Principal(CAConfig.CA_DEFAULT_SUBJECT + user));
             // 公钥
-            certGen.setPublicKey(pubKey1);
+            certGen.setPublicKey(b);
             // 签名算法
             certGen.setSignatureAlgorithm(CAConfig.SM3_SM2);
           // certGen.setSignatureAlgorithm(CAConfig.CA_SHA);
