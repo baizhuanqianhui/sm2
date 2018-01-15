@@ -124,6 +124,62 @@ public class SM2Utils {
         System.out.println("解密: ");
         plainText = new String(SM2Utils.decrypt(Util.hexToByte(prik), Util.hexToByte(cipherText)));
         System.out.println(plainText);
+        //国密私钥转为证书对象
+        PrivateKey p = new PrivateKey() {
+                @Override
+                public String getAlgorithm() {
+                    return "SM2";
+                }
+
+                @Override
+                public String getFormat() {
+                    return "X.509";
+                }
+
+                @Override
+                public byte[] getEncoded() {
+                    X962Parameters params = new X962Parameters(DERNull.INSTANCE);
+                    ECPrivateKey keyStructure = null;
+                    keyStructure = new ECPrivateKey(this.getD(), params);
+
+                    try {
+                        return (new PrivateKeyInfo(new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, params), (ASN1Encodable) keyStructure)).getEncoded("DER");
+                    } catch (Exception var3) {
+                        return null;
+                    }
+                }
+                public BigInteger getD(){
+                    return null;
+                }
+            };
+        //国密公钥转为证书对象
+         // KeyPair keyPair = this.kpg.generateKeyPair();
+            PublicKey publicKey = new PublicKey() {
+                @Override
+                public String getAlgorithm() {
+                    return "SM2";
+                }
+
+                @Override
+                public String getFormat() {
+                    return "X.509";
+                }
+
+                @Override
+                public byte[] getEncoded() {
+                    //DERObjectIdentifier info = new DERObjectIdentifier("1.2.156.10197.1.301");
+                    DERObjectIdentifier info = new DERObjectIdentifier("1.2.840.113549.1.1.1");
+//X9ObjectIdentifiers.id_ecPublicKey
+                    SubjectPublicKeyInfo info1 = new SubjectPublicKeyInfo(new AlgorithmIdentifier(PKCSObjectIdentifiers.rsaEncryption, info), "040C6CEC619E8FE896A4C36B885F7EB21B76FB7C955091BF7D1E0FF1B4618A9037DEC4861D2C293F6F5BF9F257C1FF6609F3569FBE36955BA1329533F1D2A53A5A".getBytes());
+
+                    try {
+                        return info1.getEncoded("DER");
+                    } catch (IOException var2) {
+                        var2.printStackTrace();
+                        return null;
+                    }
+                }
+            };
 
     }
 }
